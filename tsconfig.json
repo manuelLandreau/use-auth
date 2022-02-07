@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "incremental": true,            /* Enable incremental compilation */
+    "target": "es5",                /* Specify ECMAScript target version: */
+    "module": "es6",           /* 'none', 'commonjs', 'amd', 'system', etc */
+    "moduleResolution": "node",
+    "declaration": true,            /* Concatenate & emit output to single file.*/
+    "outDir": "lib",                /* Redirect output to the directory. */
+    "esModuleInterop": true,        /* Enables intero between CommonJS and ES */
+    "skipLibCheck": true,           /* Skip type checking of declaration files. */
+    "forceConsistentCasingInFileNames": true, /* Disallow inconsistently */
+    "lib": ["dom", "esnext"]
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
