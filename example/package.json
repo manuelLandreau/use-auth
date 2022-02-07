@@ -1,0 +1,27 @@
+{
+  "name": "vue3-use-auth-example",
+  "version": "1.0.0",
+  "description": "Simple auth composition function for vue 3",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manuellandreau/use-auth.git"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^0.25.0",
+    "use-auth": "manuellandreau/use-auth",
+    "vue": "^3.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.0.0",
+    "typescript": "^4.4.4",
+    "vite": "^2.7.2",
+    "vue-tsc": "^0.29.8"
+  },
+  "author": "Manuel Landreau <manuel.landreau@pm.me>",
+  "license": "ISC"
+}
