@@ -1,6 +1,6 @@
-# Basic Authentication Composable Functions
+# Basic Agnostic Authentication Composable Functions
 
-Just simple auth (JWT) composable functions for Vue 3, written in typescript
+Just simple and agnostic auth (JWT) composable functions for Vue 3, written in typescript
 
 **Minimum requirement : [Vue 3.x](https://v3.vuejs.org/guide/introduction.html)**
 
