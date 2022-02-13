@@ -1,18 +1,23 @@
-# Basic Agnostic Authentication Composable Functions
+# useAuth()
 
-Just simple and agnostic auth (JWT) composable functions for Vue 3, written in typescript
+---
+#### Just simple authentication **composable** functions for Vue 3
 
-**Minimum requirement : [Vue 3.x](https://v3.vuejs.org/guide/introduction.html)**
+- API agnostic (JWT(ish))
+- No store needed, **isAuth, isLoading** and **error** "state" variables are shared between components
+- Written in Typescript
+- It uses Axios
 
-### Get started
+**Minimum requirement : [Vue 3.2](https://v3.vuejs.org/guide/introduction.html)** (Vue 2 + Composable API not tested)
 
-##### Installation
+---
+## Get started
+### Installation
 ```
-npm install axios manuellandreau/use-auth
+npm install manuellandreau/use-auth
 # or
-yarn add axios manuellandreau/use-auth
+yarn add manuellandreau/use-auth
 ```
-
 ### How to use
 
 ```vue
@@ -98,22 +103,25 @@ async function signup() {
 </script>
 ```
 
-### Parameters
-| Function  | Parameters                                                                                                                                                                                                   | Default                                                       | Return                 |
-|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|------------------------|
-| login     | data: object<br/>url: string (POST endpoint url)<br/>remember: boolean (persist in session or local storage)<br/>tokenKey: string (token response key)<br/>storageKey (key name in local or session storage) | **required**<br/>**required**<br/>false<br/>'token'<br/>'jwt' | Promise<AxiosResponse> |
-| register  | data: object<br/>url: string (POST endpoint url)                                                                                                                                                             | **required**<br/>**required**                                 | Promise<AxiosResponse> |
-| refresh   | url: string                                                                                                                                                                                                  | **required**                                                  | Promise<AxiosResponse> |
-| logout    |                                                                                                                                                                                                              |                                                               | void                   |
+## Parameters
+| Function  | Parameters                                                                                                                                                                                                                           | Default                                                                       | Return                  |
+|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|-------------------------|
+| login     | data: object<br/>url: string (POST endpoint url)<br/>remember: boolean (persist in session or local storage)<br/>tokenKey: string (token response key)<br/>storageKey (key name in local or session storage)<br/>authorizationScheme | **required**<br/>**required**<br/>false<br/>'token'<br/>'token'<br/>'Bearer ' | Promise<AxiosResponse>  |
+| register  | data: object<br/>url: string (POST endpoint url)                                                                                                                                                                                     | **required**<br/>**required**                                                 | Promise<AxiosResponse>  |
+| refresh   | url: string<br/>authorizationScheme                                                                                                                                                                                                  | **required**<br/>'Bearer '                                                    | Promise<AxiosResponse>  |
+| logout    |                                                                                                                                                                                                                                      |                                                                               | void                    |
 
-### More 
+## More 
 
 See [Vue 3 API composition](https://v3.vuejs.org/guide/composition-api-introduction.html) and [axios](https://axios-http.com/docs/intro) documentations
 
-### Todo
-- [ ] Better tests
+## Todo
 - [ ] Fetch user function
-- [ ] Store integration
-- [ ] use fetch api, or a defferent instance of axios (option)
-- [ ] 0auth?
+- [ ] use fetch API ?
+- [ ] 0auth ?
+
+## Contributing
+
+Contributions, issues and feature requests are welcome!
+Feel free to check issues page.
 
