@@ -1,5 +1,5 @@
 # useAuth()
-
+[![](https://img.shields.io/github/workflow/status/manuellandreau/use-auth/test/main)](https://github.com/manuellandreau/use-auth/actions/workflows/test.yml)
 ---
 #### Just simple authentication **composable** functions for Vue 3
 
