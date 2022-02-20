@@ -14,7 +14,8 @@
 
 <script setup>
 import { reactive } from 'vue'
-import useAuth from 'use-auth'
+// import useAuth from 'use-auth'
+import useAuth from '../../src/composables/useAuth'
 import axios from 'axios'
 
 const form = reactive({
@@ -23,10 +24,17 @@ const form = reactive({
     remember: true
 })
 
-// Base url with axios
-axios.defaults.baseURL = 'http://localhost:3001'
+const { login, register, refresh, logout, init, isLoading, isAuth, error } = useAuth();
 
-const { login, register, refresh, logout, isLoading, isAuth, error } = useAuth();
+// Set the base API url with axios
+axios.defaults.baseURL = 'http://localhost:3001'
+// or
+// init({
+//     axiosInstance: axios.create({ baseURL: 'http://localhost:3001', /*headers: {'X-Custom-Header': 'foobar'}*/ })
+//     tokenKey: 'token',
+//     storageKey: 'token',
+//     authorizationScheme: 'Bearer'
+// });
 
 // Refresh token
 refresh('/auth/refresh')
@@ -34,12 +42,12 @@ refresh('/auth/refresh')
     .catch(console.log)
 
 async function signin() {
-    await login(form, '/auth/login', form.remember)
+    await login('/auth/login', form)
     // await getUser()
 }
 
 async function signup() {
-    await register(form, '/auth/register')
+    await register('/auth/register', form)
 }
 </script>
 
@@ -55,25 +63,32 @@ const form = reactive({
     remember: false
 })
 
-// Base url with axios
-axios.defaults.baseURL = 'http://localhost:3001'
+const { login, register, refresh, logout, init, isLoading, isAuth, error } = useAuth();
+
+// Set the base API url with axios
+// axios.defaults.baseURL = 'http://localhost:3001'
+// or
+init({
+    axiosInstance: axios.create({ baseURL: 'http://localhost:3001', /*headers: {'X-Custom-Header': 'foobar'}*/ })
+    // tokenKey: 'token',
+    // storageKey: 'token',
+    // authorizationScheme: 'Bearer'
+});
 
 // Types example
 type FormData = { email: string, password: string, remember?: boolean }
 type LoginResponse = { token?: string, error?: string }
 
-const { login, register, refresh, logout, isLoading, isAuth, error } = useAuth();
-
 // Refresh token
 (async () => await refresh('/auth/refresh'))()
 
 async function signin() {
-    await login<FormData, LoginResponse>(form, '/auth/login', form.remember)
+    await login<FormData, LoginResponse>('/auth/login', form)
     // await getUser()
 }
 
 async function signup() {
-    await register<FormData>(form, '/auth/register')
+    await register<FormData>('/auth/register', form)
 }
 </script>-->
 
