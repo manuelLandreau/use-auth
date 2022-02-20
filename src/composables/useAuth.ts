@@ -1,65 +1,81 @@
 import { ref } from 'vue'
-import axios, { AxiosResponse } from 'axios'
+import axios, { AxiosResponse, AxiosStatic } from 'axios'
+
+type Options = {
+    axiosInstance: AxiosStatic
+    tokenKey: string
+    storageKey: string
+    authorizationScheme: string
+}
 
 /**
  * useAuth compositable functions
  * @see https://v3.vuejs.org/guide/composition-api-introduction.html
- * @return { login: Function, logout: Function, refresh: Function, isAuth: Ref<boolean>, isLoading: Ref<boolean>, error: Ref<any> }
+ * @return { login: Function, logout: Function, refresh: Function, init: Function,
+ *           isAuth: Ref<boolean>, isLoading: Ref<boolean>, error: Ref<any> }
  */
 export default function useAuth() {
     const isAuth = ref(false)
     const isLoading = ref(false)
     const error = ref(null)
 
+    let options: Options = {
+        axiosInstance: axios,
+        tokenKey: 'token',
+        storageKey: 'token',
+        authorizationScheme: 'Bearer'
+    }
+
+    function init(opts: Options): Options {
+        options = {...options, ...opts}
+        return options
+    }
+
     /**
      * Login function
-     * @param data: T
      * @param url: string
-     * @param remember?: boolean
-     * @param tokenKey?: string
-     * @param storageKey?: string
-     * @param authorizationScheme?: string
+     * @param data: T
      * @return Promise<AxiosResponse<U, any>>
      */
-    function login<T, U>(
-        data: T,
-        url: string,
-        remember: boolean = false,
-        tokenKey: string = 'token',
-        storageKey: string = 'token',
-        authorizationScheme = 'Bearer '
-    ): Promise<AxiosResponse<U, any>> {
+    function login<T, U>(url: string, data: T & { remember: true }): Promise<AxiosResponse<U>> {
         isLoading.value = true
         error.value = null
 
-        return axios.post<U>(url, { method: 'POST', data })
-            .then((response: { data: U }) => {
-                axios.defaults.headers.common['Authorization'] = authorizationScheme + response.data[tokenKey]
-                remember
-                    ? localStorage.setItem(storageKey, response.data[tokenKey])
-                    : sessionStorage.setItem(storageKey, response.data[tokenKey])
+        return options.axiosInstance.post<U>(url, { method: 'POST', data })
+            .then((response: { data: U | any }) => {
+                options.axiosInstance.defaults.headers.common['Authorization'] =
+                    options.authorizationScheme + ' ' + response.data[options.tokenKey]
+                data.remember
+                    ? localStorage.setItem(
+                        options.storageKey,
+                        options.authorizationScheme + ' ' + response.data[options.tokenKey]
+                    )
+                    : sessionStorage.setItem(
+                        options.storageKey,
+                        options.authorizationScheme + ' ' + response.data[options.tokenKey]
+                    )
                 isAuth.value = true
                 return response
             })
-            .catch(response => {
-                error.value = response.response
+            .catch(e => {
+                error.value = e.response
                 logout()
-                return response
+                return e
             })
             .finally(() => isLoading.value = false)
     }
 
     /**
      * Register function
-     * @param data: string
      * @param url: string
+     * @param data: string
      * @return Promise<AxiosResponse<U, any>>
      */
-    function register<T, U>(data: T, url: string): Promise<AxiosResponse<U, any>> {
+    function register<T, U>(url: string, data: T): Promise<AxiosResponse<U>> {
         isLoading.value = true
         error.value = null
 
-        return axios.post<U>(url, { method: 'POST', data })
+        return options.axiosInstance.post<U>(url, { method: 'POST', data })
             .then((response: { data: U }) => response)
             .catch(response => {
                 error.value = response.response
@@ -72,31 +88,34 @@ export default function useAuth() {
     /**
      * Refresh token function
      * @param url: string
-     * @param tokenKey?: string
-     * @param storageKey?: string
-     * @param authorizationScheme?: string
      * @return Promise<AxiosResponse<T, any>>
      */
-    function refresh<T>(
-        url, tokenKey: string = 'token',
-        storageKey: string = 'token',
-        authorizationScheme = 'Bearer '
-    ): Promise<AxiosResponse<T, any>> {
+    function refresh<T>(url: string): Promise<AxiosResponse<T>> {
         isLoading.value = true
         error.value = null
         let remember = false
 
-        if (localStorage.getItem(storageKey)) {
+        if (localStorage.getItem(options.storageKey)) {
             remember = true
-            axios.defaults.headers.common['Authorization'] = authorizationScheme + localStorage.getItem(storageKey)
-        } else axios.defaults.headers.common['Authorization'] = authorizationScheme + sessionStorage.getItem(storageKey)
+            options.axiosInstance.defaults.headers.common['Authorization'] =
+                options.authorizationScheme + ' ' + localStorage.getItem(options.storageKey)
+        } else
+            options.axiosInstance.defaults.headers.common['Authorization'] =
+                options.authorizationScheme + ' ' + sessionStorage.getItem(options.storageKey)
 
-        return axios.get<T>(url)
-            .then((response: { data: T }) => {
-                axios.defaults.headers.common['Authorization'] = authorizationScheme + response.data[tokenKey]
+        return options.axiosInstance.get<T>(url)
+            .then((response: { data: T | any }) => {
+                options.axiosInstance.defaults.headers.common['Authorization'] =
+                    options.authorizationScheme + response.data[options.tokenKey]
                 remember
-                    ? localStorage.setItem(storageKey, response.data[tokenKey])
-                    : sessionStorage.setItem(storageKey, response.data[tokenKey])
+                    ? localStorage.setItem(
+                        options.storageKey,
+                        options.authorizationScheme + ' ' + response.data[options.tokenKey]
+                    )
+                    : sessionStorage.setItem(
+                        options.storageKey,
+                        options.authorizationScheme + ' ' + response.data[options.tokenKey]
+                    )
                 isAuth.value = true
                 return response
             })
@@ -109,13 +128,12 @@ export default function useAuth() {
 
     /**
      * Logout function
-     * @param storageKey?: string
      * @return void
      */
-    function logout(storageKey: string = 'token'): void {
-        axios.defaults.headers.common['Authorization'] = null
-        localStorage.removeItem(storageKey)
-        sessionStorage.removeItem(storageKey)
+    function logout(): void {
+        options.axiosInstance.defaults.headers.common['Authorization'] = false
+        localStorage.removeItem(options.storageKey)
+        sessionStorage.removeItem(options.storageKey)
         isAuth.value = false
     }
 
@@ -124,6 +142,7 @@ export default function useAuth() {
         register,
         refresh,
         logout,
+        init,
         isAuth,
         isLoading,
         error
