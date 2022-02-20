@@ -38,7 +38,7 @@ yarn add manuellandreau/use-auth
 <script setup>
 import { reactive } from 'vue'
 import useAuth from 'use-auth'
-// import axios from 'axios'
+import axios from 'axios'
 
 const form = reactive({
     email: '',
@@ -46,10 +46,17 @@ const form = reactive({
     remember: true
 })
 
-// Base url with axios
-// axios.defaults.baseURL = 'http://localhost...'
+const { login, register, refresh, logout, init, isLoading, isAuth, error } = useAuth();
 
-const { login, register, refresh, logout, isLoading, isAuth, error } = useAuth();
+// Set the base API url with axios
+axios.defaults.baseURL = 'http://your-api-base-url'
+// or
+// init({
+//     axiosInstance: axios.create({ baseURL: 'http://your-api-base-url', /*headers: {'X-Custom-Header': 'foobar'}*/ })
+//     tokenKey: 'token',
+//     storageKey: 'token',
+//     authorizationScheme: 'Bearer'
+// })
 
 // Refresh token
 refresh('/auth/refresh')
@@ -57,12 +64,12 @@ refresh('/auth/refresh')
     .catch(console.log)
 
 async function signin() {
-    await login(form, '/auth/login', form.remember)
+    await login('/auth/login', form)
     // await getUser()
 }
 
 async function signup() {
-    await register(form, '/auth/register')
+    await register('/auth/register', form)
 }
 </script>
 ```
@@ -72,7 +79,7 @@ async function signup() {
 <script setup lang="ts">
 import { reactive } from 'vue'
 import useAuth from 'use-auth'
-// import axios from 'axios'
+import axios from 'axios'
 
 const form = reactive({
     email: '',
@@ -80,45 +87,48 @@ const form = reactive({
     remember: false
 })
 
-// Base url with axios
-// axios.defaults.baseURL = 'http://localhost...'
+const { login, register, refresh, logout, init, isLoading, isAuth, error } = useAuth();
+
+// Set the base API url with axios
+axios.defaults.baseURL = 'http://your-api-base-url'
+// or
+// init({
+//     axiosInstance: axios.create({ baseURL: 'http://your-api-base-url', /*headers: {'X-Custom-Header': 'foobar'}*/ })
+//     tokenKey: 'token',
+//     storageKey: 'token',
+//     authorizationScheme: 'Bearer'
+// })
 
 // Types example
 type FormData = { email: string, password: string, remember?: boolean }
 type LoginResponse = { token?: string, error?: string }
 
-const { login, register, refresh, logout, isLoading, isAuth, error } = useAuth();
-
 // Refresh token
 (async () => await refresh('/auth/refresh'))()
 
 async function signin() {
-    await login<FormData, LoginResponse>(form, '/auth/login', form.remember)
+    await login<FormData, LoginResponse>('/auth/login', form)
     // await getUser()
 }
 
 async function signup() {
-    await register<FormData>(form, '/auth/register')
+    await register<FormData>('/auth/register', form)
 }
 </script>
 ```
 
 ## Parameters
-| Function  | Parameters                                                                                                                                                                                                                           | Default                                                                       | Return                  |
-|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|-------------------------|
-| login     | data: object<br/>url: string (POST endpoint url)<br/>remember: boolean (persist in session or local storage)<br/>tokenKey: string (token response key)<br/>storageKey (key name in local or session storage)<br/>authorizationScheme | **required**<br/>**required**<br/>false<br/>'token'<br/>'token'<br/>'Bearer ' | Promise<AxiosResponse>  |
-| register  | data: object<br/>url: string (POST endpoint url)                                                                                                                                                                                     | **required**<br/>**required**                                                 | Promise<AxiosResponse>  |
-| refresh   | url: string<br/>authorizationScheme                                                                                                                                                                                                  | **required**<br/>'Bearer '                                                    | Promise<AxiosResponse>  |
-| logout    |                                                                                                                                                                                                                                      |                                                                               | void                    |
+| Function | Parameters                                                                                                                            | Default                                                     | Return                  |
+|----------|---------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------|-------------------------|
+| init     | axiosInstance<br/>tokenKey: string (token response key)<br/>storageKey (key name in local or session storage)<br/>authorizationScheme | Global axios instance<br/>'token'<br/>'token'<br/>'Bearer ' | Promise<AxiosResponse>  |
+| login    | url: string (POST endpoint url)<br/>data: object                                                                                      | **required**<br/>**required**                               | Promise<AxiosResponse>  |
+| register | url: string (POST endpoint url)<br/>data: object                                                                                      | **required**<br/>**required**                               | Promise<AxiosResponse>  |
+| refresh  | url: string                                                                                                                           | **required**                                                | Promise<AxiosResponse>  |
+| logout   |                                                                                                                                       |                                                             | void                    |
 
 ## More 
 
 See [Vue 3 API composition](https://v3.vuejs.org/guide/composition-api-introduction.html) and [axios](https://axios-http.com/docs/intro) documentations
-
-## Todo
-- [ ] Fetch user function
-- [ ] use fetch API ?
-- [ ] 0auth ?
 
 ## Contributing
 
