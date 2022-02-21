@@ -35,7 +35,7 @@ function useAuth() {
     error.value = null;
     return options.axiosInstance.post(url, { method: "POST", data }).then((response) => {
       options.axiosInstance.defaults.headers.common["Authorization"] = options.authorizationScheme + " " + response.data[options.tokenKey];
-      data.remember ? localStorage.setItem(options.storageKey, options.authorizationScheme + " " + response.data[options.tokenKey]) : sessionStorage.setItem(options.storageKey, options.authorizationScheme + " " + response.data[options.tokenKey]);
+      data.remember ? localStorage.setItem(options.storageKey, response.data[options.tokenKey]) : sessionStorage.setItem(options.storageKey, response.data[options.tokenKey]);
       isAuth.value = true;
       return response;
     }).catch((e) => {
@@ -64,7 +64,7 @@ function useAuth() {
       options.axiosInstance.defaults.headers.common["Authorization"] = options.authorizationScheme + " " + sessionStorage.getItem(options.storageKey);
     return options.axiosInstance.get(url).then((response) => {
       options.axiosInstance.defaults.headers.common["Authorization"] = options.authorizationScheme + response.data[options.tokenKey];
-      remember ? localStorage.setItem(options.storageKey, options.authorizationScheme + " " + response.data[options.tokenKey]) : sessionStorage.setItem(options.storageKey, options.authorizationScheme + " " + response.data[options.tokenKey]);
+      remember ? localStorage.setItem(options.storageKey, response.data[options.tokenKey]) : sessionStorage.setItem(options.storageKey, response.data[options.tokenKey]);
       isAuth.value = true;
       return response;
     }).catch((response) => {
