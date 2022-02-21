@@ -1,4 +1,5 @@
 const path = require('path')
+import vue from '@vitejs/plugin-vue'
 const { defineConfig } = require('vite')
 
 module.exports = defineConfig({
@@ -17,5 +18,14 @@ module.exports = defineConfig({
                 }
             }
         }
-    }
+    },
+    plugins: [
+        vue({
+            babel: {
+                plugins: [
+                    '@babel/plugin-proposal-optional-chaining'
+                ],
+            },
+        })
+    ]
 })
