@@ -22,7 +22,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "@babel/plugin-proposal-optional-chaining": "^7.16.7",
     "axios": "^0.25",
     "vue": "^3.2"
   },
@@ -31,7 +30,6 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",
     "@types/jest": "^27.4.0",
-    "@vitejs/plugin-vue": "^2.0.0",
     "@vue/test-utils": "^2.0.0-rc.18",
     "babel-jest": "^27.5.0",
     "jest": "^27.4.7",
@@ -54,8 +52,7 @@
   "babel": {
     "presets": [
       "@babel/preset-env",
-      "@babel/preset-typescript",
-      "@babel/plugin-proposal-optional-chaining"
+      "@babel/preset-typescript"
     ],
     "plugins": [
       [

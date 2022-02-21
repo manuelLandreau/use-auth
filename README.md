@@ -130,6 +130,13 @@ async function signup() {
 
 See [Vue 3 API composition](https://v3.vuejs.org/guide/composition-api-introduction.html) and [axios](https://axios-http.com/docs/intro) documentations
 
+## Development
+
+Require node >14
+
+Tests with Jest (npm test)
+Build with Vite (npm run build)
+
 ## Contributing
 
 Contributions, issues and feature requests are welcome!
