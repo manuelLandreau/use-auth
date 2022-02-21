@@ -46,14 +46,8 @@ export default function useAuth() {
                 options.axiosInstance.defaults.headers.common['Authorization'] =
                     options.authorizationScheme + ' ' + response.data[options.tokenKey]
                 data.remember
-                    ? localStorage.setItem(
-                        options.storageKey,
-                        options.authorizationScheme + ' ' + response.data[options.tokenKey]
-                    )
-                    : sessionStorage.setItem(
-                        options.storageKey,
-                        options.authorizationScheme + ' ' + response.data[options.tokenKey]
-                    )
+                    ? localStorage.setItem(options.storageKey, response.data[options.tokenKey])
+                    : sessionStorage.setItem(options.storageKey, response.data[options.tokenKey])
                 isAuth.value = true
                 return response
             })
@@ -108,14 +102,8 @@ export default function useAuth() {
                 options.axiosInstance.defaults.headers.common['Authorization'] =
                     options.authorizationScheme + response.data[options.tokenKey]
                 remember
-                    ? localStorage.setItem(
-                        options.storageKey,
-                        options.authorizationScheme + ' ' + response.data[options.tokenKey]
-                    )
-                    : sessionStorage.setItem(
-                        options.storageKey,
-                        options.authorizationScheme + ' ' + response.data[options.tokenKey]
-                    )
+                    ? localStorage.setItem(options.storageKey, response.data[options.tokenKey])
+                    : sessionStorage.setItem(options.storageKey, response.data[options.tokenKey])
                 isAuth.value = true
                 return response
             })

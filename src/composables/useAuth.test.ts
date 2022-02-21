@@ -15,7 +15,7 @@ test('It should get current value when trigger register', function () {
     mountComposition(async () => {
         axios.post.mockResolvedValueOnce({ data: {} });
         const { register, error } = useAuth()
-        await register({ email: 'test@test.com', password: 'test' }, '/test/register_url')
+        await register('/test/register_url', {email: 'test@test.com', password: 'test' })
 
         expect(error.value).toBeNull()
     })
@@ -26,7 +26,7 @@ test('It should get current value when trigger login', function () {
         const token = '12345678987654321'
         axios.post.mockResolvedValueOnce({ data: { token } });
         const { login, isAuth, error } = useAuth()
-        await login({ email: 'test@test.com', password: 'test' }, '/test/login_url')
+        await login('/test/login_url', { email: 'test@test.com', password: 'test' })
 
         expect(isAuth.value).toEqual(true)
         expect(error.value).toBeNull()
@@ -41,7 +41,7 @@ test('It should get current value when trigger logout', function () {
         logout()
 
         expect(sessionStorage.getItem('token')).toBeNull()
-        expect(axios.defaults.headers.common['Authorization']).toBeNull()
+        expect(axios.defaults.headers.common['Authorization']).toBeFalsy()
     })
 });
 
@@ -58,12 +58,12 @@ test('It should render template with reactive values', async function () {
 
     // triggering an error
     axios.post.mockRejectedValueOnce({ response: 'an error...' });
-    await wrapper.result.current.login({ email: 'test@test.com', password: 'test' }, '/test/login_url')
+    await wrapper.result.current.login('/test/login_url', { email: 'test@test.com', password: 'test' })
     expect(wrapper.html()).toEqual(`<div>Auth: false, Loading: false, Error: an error...</div>`)
     expect(spy).toHaveBeenCalled();
 
     // with success response
     axios.post.mockResolvedValueOnce({ data: { token: 'a token' } });
-    await wrapper.result.current.login({ email: 'test@test.com', password: 'test' }, '/test/login_url')
+    await wrapper.result.current.login('/test/login_url', { email: 'test@test.com', password: 'test' })
     expect(wrapper.html()).toEqual(`<div>Auth: true, Loading: false, Error: </div>`)
 });
