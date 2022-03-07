@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import axios, { AxiosResponse, AxiosStatic } from 'axios'
 
 type Options = {
@@ -8,6 +8,11 @@ type Options = {
     authorizationScheme: string
 }
 
+// Auth state
+const isAuth = ref(false)
+const isLoading = ref(false)
+const error = ref(null)
+
 /**
  * useAuth compositable functions
  * @see https://v3.vuejs.org/guide/composition-api-introduction.html
@@ -15,10 +20,6 @@ type Options = {
  *           isAuth: Ref<boolean>, isLoading: Ref<boolean>, error: Ref<any> }
  */
 export default function useAuth() {
-    const isAuth = ref(false)
-    const isLoading = ref(false)
-    const error = ref(null)
-
     let options: Options = {
         axiosInstance: axios,
         tokenKey: 'token',
