@@ -16,10 +16,10 @@ var __spreadValues = (a, b) => {
 };
 import { ref } from "vue";
 import axios from "axios";
+const isAuth = ref(false);
+const isLoading = ref(false);
+const error = ref(null);
 function useAuth() {
-  const isAuth = ref(false);
-  const isLoading = ref(false);
-  const error = ref(null);
   let options = {
     axiosInstance: axios,
     tokenKey: "token",
