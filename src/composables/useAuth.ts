@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import axios, { AxiosResponse, AxiosStatic } from 'axios'
 
 type Options = {
@@ -38,7 +38,7 @@ export default function useAuth() {
      * @param data: T
      * @return Promise<AxiosResponse<U, any>>
      */
-    function login<T, U>(url: string, data: T & { remember: true }): Promise<AxiosResponse<U>> {
+    function login<T, U>(url: string, data: T & { remember?: true }): Promise<AxiosResponse<U>> {
         isLoading.value = true
         error.value = null
 

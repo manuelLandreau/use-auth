@@ -1,4 +1,10 @@
 export default {
     clearMocks: true,
-    testEnvironment: 'jsdom'
+    testEnvironment: 'jsdom',
+    testEnvironmentOptions: {
+        customExportConditions: [
+            'node',
+            'node-addons'
+        ]
+    },
 };
